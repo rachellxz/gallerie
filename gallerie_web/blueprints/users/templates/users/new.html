@@ -8,22 +8,32 @@ sign up
 <div class="form-temp">
     <h3> sign up </h3>
 
-    <form action="/create-account" method="POST" autocomplete="off">
+    <form action="{{ url_for('users.create')}}" method="POST" autocomplete="off" class="needs-validation" novalidate>
         <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
-        First Name: <input name="first_name" type="text" placeholder="First Name" class="signup" autocomplete="OFF" />
+        <div class="form-group">
+            <label for="first_name">First Name: </label>
+            <input name="first_name" type="text" placeholder="First Name" class="signup" autocomplete="OFF" required />
 
-        Last Name: <input name="last_name" type="text" placeholder="Last Name" class="signup" autocomplete="OFF" />
+            <label for="last_name">Last Name: </label>
+            <input name="last_name" type="text" placeholder="Last Name" class="signup" autocomplete="OFF" required />
 
-        Email: <input name="email" type="text" placeholder="Email" class="signup" autocomplete="OFF" />
+            <label for="email">Email: </label>
+            <input name="email" type="text" placeholder="Email" class="signup" autocomplete="OFF" required />
 
-        Username: <input name="username" type="text" placeholder="Username" class="signup" id="email"
-            autocomplete="OFF" />
+            <label for="username">Username: </label>
+            <input name="username" type="text" placeholder="Username" class="signup" id="email" autocomplete="OFF"
+                required />
+            {% if errors|length > 0 %}
+            <div class="validation_error"> {{errors["Username"]}}</div>
+            {% endif %}
 
-        Password: <input name="password" type="password" placeholder="Password" class="signup" />
+            <label for="password">Password: </label>
+            <input name="password" type="password" placeholder="Password" class="signup" required />
 
-        Retype Password: <input name="retype_password" type="password" placeholder="Retype Password" class="signup" />
+            <label for="retype_password">Re-enter Password: </label>
+            <input name="retype_password" type="password" placeholder="Retype Password" class="signup" required />
 
-        <br> <br>
+        </div>
         <input type="submit" value="Sign Up" class="btn-temp">
 
     </form>
