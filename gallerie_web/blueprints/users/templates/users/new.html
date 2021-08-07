@@ -1,0 +1,32 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+sign up
+{% endblock %}
+
+{% block content %}
+<div class="form-temp">
+    <h3> sign up </h3>
+
+    <form action="/create-account" method="POST" autocomplete="off">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+        First Name: <input name="first_name" type="text" placeholder="First Name" class="signup" autocomplete="OFF" />
+
+        Last Name: <input name="last_name" type="text" placeholder="Last Name" class="signup" autocomplete="OFF" />
+
+        Email: <input name="email" type="text" placeholder="Email" class="signup" autocomplete="OFF" />
+
+        Username: <input name="username" type="text" placeholder="Username" class="signup" id="email"
+            autocomplete="OFF" />
+
+        Password: <input name="password" type="password" placeholder="Password" class="signup" />
+
+        Retype Password: <input name="retype_password" type="password" placeholder="Retype Password" class="signup" />
+
+        <br> <br>
+        <input type="submit" value="Sign Up" class="btn-temp">
+
+    </form>
+</div>
+
+{% endblock %}
