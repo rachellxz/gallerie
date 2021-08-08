@@ -32,11 +32,11 @@
                 </li>
 
                 <li class="nav-item">
-                    <form class="d-flex nav-link active" action="" method="">
+                    <form class="d-flex nav-link active" action="{{url_for('users.search')}}" method="POST">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
-                        <input class="form-control me-2" type="search" placeholder="search" aria-label="Search"
+                        <input required class="form-control me-2" type="search" placeholder="search" aria-label="Search"
                             name="username">
-                        <button class="btn btn-outline-success" type="submit" hidden> Search </button>
+                        <input class="btn btn-outline-success" type="submit" hidden />
                     </form>
                 </li>
                 <li class="nav-item">

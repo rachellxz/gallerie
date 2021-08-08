@@ -96,12 +96,29 @@ def update():
 
 
 # show user profiles by username
-@users_blueprint.route('/<username>', methods=["GET"])
+@users_blueprint.route("/<username>", methods=["GET"])
 def show(username):
     user = User.get_or_none(User.username == username)
-    return render_template("users/show.html", user=user)
+    if user:
+        return render_template("users/show.html", user=user)
+    else:
+        flash("This account doesn't exist.")
+        return redirect(url_for("home"))
 
 
-@users_blueprint.route('/', methods=["GET"])
+# search profile by username
+@users_blueprint.route("/search", methods=["POST"])
+def search():
+
+    username = request.form["username"].lower()
+
+    if username:
+        return redirect(url_for('users.show', username=username))
+    else:
+        flash("Hmm, an error occured. Please try again.")
+        return redirect(url_for("home"))
+
+
+@users_blueprint.route("/", methods=["GET"])
 def index():
     return "USERS"
