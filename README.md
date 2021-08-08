@@ -1,1 +1,1 @@
-# gallerie | a Flask project
+# gallerie
