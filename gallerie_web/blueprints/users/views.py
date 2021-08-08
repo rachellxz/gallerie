@@ -95,9 +95,11 @@ def update():
         return render_template("users/edit.html")
 
 
+# show user profiles by username
 @users_blueprint.route('/<username>', methods=["GET"])
 def show(username):
-    pass
+    user = User.get_or_none(User.username == username)
+    return render_template("users/show.html", user=user)
 
 
 @users_blueprint.route('/', methods=["GET"])
