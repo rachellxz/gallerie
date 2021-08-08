@@ -9,36 +9,69 @@ edit profile
 <div>
     <h3> {{current_user.first_name}}'s Current Details </h3>
 
-    <form action="{{url_for('users.update')}}" method="POST">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
-        <div>
-            <label for="username">Username:</label>
-            <input required class="form-control" name="username" type="text" value="{{ current_user.username}}"
-                autocomplete="OFF" />
-        </div>
-        <div>
-            <label for="first_name">First Name:</label>
-            <input required class="form-control" name="first_name" type="text" value="{{ current_user.first_name}}"
-                autocomplete="OFF" />
-        </div>
-        <div>
-            <label for="last_name">Last Name:</label>
-            <input required class="form-control" name="last_name" type="text" value="{{ current_user.last_name}}"
-                autocomplete="OFF" />
+    <input type="image" name="profile-pic" src={{current_user.profile_img_url}} width="80px"
+        class="small-profile-pic edit-profile-pic" data-bs-toggle="modal" data-bs-target="#upload-profile-pic" />
 
-        </div>
-        <div>
-            <label for="email">Email:</label>
-            <input required class="form-control" name="email" type="email" value="{{ current_user.email}}"
-                autocomplete="OFF" />
-        </div>
+    <div class="modal fade" id="upload-profile-pic" tabindex="-1" aria-labelledby="upload-profile-pic"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="upload-pic-modal-title"> Upload a profile pic </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
 
-        <div class="col-12">
-            <input type="submit" class="btn btn-primary" value="save changes">
+                    <div class="form-temp">
+                        <form action="{{url_for('users.upload')}}" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+                            <label for="user_file"> Upload File </label>
+                            <br>
+                            <br>
+                            <input type="file" name="user_file" />
+                            <br>
+                            <br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Upload"> </input>
+                </div>
+                </form>
+            </div>
         </div>
+    </div>
+    <div>
+        <form action="{{url_for('users.update')}}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+            <div>
+                <label for="username">Username:</label>
+                <input required class="form-control" name="username" type="text" value="{{ current_user.username}}"
+                    autocomplete="OFF" />
+            </div>
+            <div>
+                <label for="first_name">First Name:</label>
+                <input required class="form-control" name="first_name" type="text" value="{{ current_user.first_name}}"
+                    autocomplete="OFF" />
+            </div>
+            <div>
+                <label for="last_name">Last Name:</label>
+                <input required class="form-control" name="last_name" type="text" value="{{ current_user.last_name}}"
+                    autocomplete="OFF" />
 
-        Last updated at: {{current_user.updated_at.date()}}
-    </form>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input required class="form-control" name="email" type="email" value="{{ current_user.email}}"
+                    autocomplete="OFF" />
+            </div>
+
+            <div class="col-12">
+                <input type="submit" class="btn btn-primary" value="save changes">
+            </div>
+
+            Last updated at: {{current_user.updated_at.date()}}
+        </form>
+    </div>
 
 </div>
 

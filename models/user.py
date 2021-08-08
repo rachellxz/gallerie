@@ -15,7 +15,9 @@ class User(BaseModel, UserMixin):
     password_hash = pw.TextField(null=False)
     password = None
 
-    # profile_img_url = pw.CharField(null=True)
+    profile_img_url = pw.TextField(
+        default="http://gram0721.s3.amazonaws.com/default_profile_img.png")
+
     # public_profile = pw.BooleanField(default=True)
 
     def validate(self):
@@ -45,7 +47,7 @@ class User(BaseModel, UserMixin):
         has_lowercase = re.search(r"[a-z]", self.password)
         has_uppercase = re.search(r"[A-Z]", self.password)
         has_special_char = re.search(
-            r"[\[ \] \{ \} \# \% \$ \@ \! \^ \& \* \( \) \+ \_ \- \=]",
+            r"[\[ \] \{ \} \# \% \$ \@ \! \^ \& \* \( \) \+ \_ \- \= \~ \_]",
             self.password)
 
         if has_lowercase and has_uppercase and has_special_char:

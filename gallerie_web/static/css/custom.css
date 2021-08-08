@@ -31,3 +31,7 @@ h1 {
   font-size: 30px;
   padding-left: 10px;
 }
+
+#profile-img {
+  border-radius: 50%;
+}
