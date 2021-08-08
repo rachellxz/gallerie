@@ -39,8 +39,14 @@ def create():
                     password=password)
 
     if new_user.save():
-        flash("Account created successfully. Thanks for signing up!")
-        return redirect(url_for('users.new'))
+        valid_user = User.get_or_none(User.username == username)
+        remember = True if request.form.get("remember") else False
+        login_user(valid_user, remember=remember)
+        flash(
+            f"Account created successfully. Thanks for signing up, {current_user.first_name}!"
+        )
+        return redirect(url_for("home"))
+
     else:
         for errors in new_user.errors:
             flash(errors)
@@ -50,16 +56,6 @@ def create():
                                username=username,
                                email=email,
                                errors=new_user.errors)
-
-
-@users_blueprint.route('/<username>', methods=["GET"])
-def show(username):
-    pass
-
-
-@users_blueprint.route('/', methods=["GET"])
-def index():
-    return "USERS"
 
 
 @users_blueprint.route("/edit")
@@ -76,16 +72,11 @@ def edit():
 @users_blueprint.route("/update", methods=["POST"])
 @login_required
 def update():
+
     first_name = request.form.get("first_name")
     last_name = request.form.get("last_name")
     email = request.form.get("email")
     username = request.form.get("username")
-
-    # check that all fields are entered
-    if not first_name or not last_name:
-        flash("Please ensure all fields are entered.")
-        return redirect(url_for("users.edit"))
-
     updated_at = datetime.datetime.now()
 
     update_query = User.update(
@@ -98,3 +89,17 @@ def update():
     if update_query.execute():
         flash("User details successfully saved.")
         return redirect(url_for('users.edit'))
+    else:
+        # still need to check for errors (validation - e.g., if username or email is not unique)
+        flash("Changes could not be saved. Please try again.")
+        return render_template("users/edit.html")
+
+
+@users_blueprint.route('/<username>', methods=["GET"])
+def show(username):
+    pass
+
+
+@users_blueprint.route('/', methods=["GET"])
+def index():
+    return "USERS"

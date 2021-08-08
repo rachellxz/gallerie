@@ -12,27 +12,27 @@ edit profile
     <form action="{{url_for('users.update')}}" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
         <div>
+            <label for="username">Username:</label>
+            <input required class="form-control" name="username" type="text" value="{{ current_user.username}}"
+                autocomplete="OFF" />
+        </div>
+        <div>
             <label for="first_name">First Name:</label>
-            <input class="form-control" name="first_name" type="text" value="{{ current_user.first_name}}"
+            <input required class="form-control" name="first_name" type="text" value="{{ current_user.first_name}}"
                 autocomplete="OFF" />
         </div>
         <div>
             <label for="last_name">Last Name:</label>
-            <input class="form-control" name="last_name" type="text" value="{{ current_user.last_name}}"
+            <input required class="form-control" name="last_name" type="text" value="{{ current_user.last_name}}"
                 autocomplete="OFF" />
 
         </div>
         <div>
             <label for="email">Email:</label>
-            <input class="form-control" name="email" type="text" value="{{ current_user.email}}" autocomplete="OFF" />
-
-        </div>
-        <div>
-            <label for="username">Username:</label>
-            <input class="form-control" name="username" type="text" value="{{ current_user.username}}"
+            <input required class="form-control" name="email" type="email" value="{{ current_user.email}}"
                 autocomplete="OFF" />
-
         </div>
+
         <div class="col-12">
             <input type="submit" class="btn btn-primary" value="save changes">
         </div>
