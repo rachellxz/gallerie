@@ -17,5 +17,10 @@ footer {
 }
 
 * {
-  font-family: Inconsolata;
+  font-family: Karla;
+  text-align: center;
+}
+
+h1 {
+  font-family: Style Script;
 }

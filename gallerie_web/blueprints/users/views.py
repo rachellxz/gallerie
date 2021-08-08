@@ -19,16 +19,16 @@ def create():
     retype_password = request.form.get("retype_password")
 
     ## FORM VALIDATION
-    # check if all fields are filled
-    if not first_name or not last_name or not email or not password or not retype_password or not username:
-        flash("Please ensure all fields are filled.")
-        return redirect(url_for("users.new"))
-
     # check if passwords match
     if password != retype_password:
         flash("Passwords do not match.")
-        return redirect(url_for("users.new"))
+        return render_template("users/new.html",
+                               first_name=first_name,
+                               last_name=last_name,
+                               username=username,
+                               email=email)
 
+    # if data is valid, save user to database
     new_user = User(first_name=first_name.title(),
                     last_name=last_name.title(),
                     email=email,
@@ -36,12 +36,17 @@ def create():
                     password=password)
 
     if new_user.save():
-        flash("Your gallerie account has been created! Thanks for signing up!")
-        return redirect(url_for("users.new"))
+        flash("User successfully created!")
+        return redirect(url_for('users.new'))
     else:
         for errors in new_user.errors:
             flash(errors)
-        return redirect(url_for("users.new"))
+        return render_template("users/new.html",
+                               first_name=first_name,
+                               last_name=last_name,
+                               username=username,
+                               email=email,
+                               errors=new_user.errors)
 
 
 @users_blueprint.route('/<username>', methods=["GET"])
