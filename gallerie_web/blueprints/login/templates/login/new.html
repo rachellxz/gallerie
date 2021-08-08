@@ -1,0 +1,32 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+log in
+{% endblock %}
+
+{% block content %}
+
+<h1> log in </h1>
+<div>
+    <form action="{{url_for('login.create')}}" method="POST" autocomplete="off">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+        <div>
+            <label for="username"> Username: </label>
+            <input name="username" type="text" placeholder="Username" class="signup" id="email" autocomplete="OFF"
+                autofocus value="{{username}}" />
+        </div>
+        <div>
+            <label for="password"> Password: </label>
+            <input name="password" type="password" placeholder="Password" class="signup" />
+        </div>
+        <div>
+            <input type="submit" id="signup-btn" />
+        </div>
+    </form>
+</div>
+<br>
+<div>
+    Don't have an account? Sign up <a href="{{ url_for('users.new')}}">here</a>!
+</div>
+
+{% endblock %}

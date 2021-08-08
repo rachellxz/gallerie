@@ -9,7 +9,7 @@ def new():
     return render_template('users/new.html')
 
 
-@users_blueprint.route('/', methods=['POST'])
+@users_blueprint.route('/new', methods=['POST'])
 def create():
     first_name = request.form.get("first_name")
     last_name = request.form.get("last_name")
@@ -36,7 +36,7 @@ def create():
                     password=password)
 
     if new_user.save():
-        flash("User successfully created!")
+        flash("Account created successfully. Thanks for signing up!")
         return redirect(url_for('users.new'))
     else:
         for errors in new_user.errors:

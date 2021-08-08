@@ -4,9 +4,10 @@ from collections import defaultdict
 import re
 from playhouse.postgres_ext import PostgresqlExtDatabase
 from werkzeug.security import generate_password_hash
+from flask_login import UserMixin
 
 
-class User(BaseModel):
+class User(BaseModel, UserMixin):
     first_name = pw.CharField(null=False)
     last_name = pw.CharField(null=False)
     email = pw.CharField(unique=True, null=False)
