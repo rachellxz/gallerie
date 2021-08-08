@@ -1,10 +1,16 @@
 {% extends "_layout.html" %}
 
 {% block title %}
-log in
+home
 {% endblock %}
 
 {% block content %}
-<h1> Welcome back! </h1>
+<h1> Hello {{first_name}}! </h1>
+
+<form action="{{url_for('login.destroy')}}" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+    <input class="btn btn-primary" type="submit" value="log out" />
+</form>
+
 
 {% endblock %}

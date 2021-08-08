@@ -45,11 +45,26 @@ def create():
 @login_blueprint.route("/home")
 @login_required
 def home():
-    return render_template("login/home.html")
+    return render_template("login/home.html",
+                           first_name=current_user.first_name)
 
 
-# option 1: manual sessions
-# create/start session after successful login
+#log out / destroy session
+@login_blueprint.route("/end", methods=["POST"])
+@login_required
+def destroy():
+    user = User.get_or_none(User.username == current_user.username)
+
+    if user:
+        logout_user()
+        flash("Logout successful. See you again soon!")
+        return redirect(url_for('login.new'))
+    else:
+        flash("Hmm, an error occured. Please try again.")
+        return redirect(url_for('home'))
+
+
+# create/start session after successful login using manual SESSIONS
 # @login_blueprint.route("/", methods=["POST"])
 # def create():
 
