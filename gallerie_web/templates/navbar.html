@@ -1,0 +1,52 @@
+{% if not current_user.is_authenticated %}
+{% include "landing.html" %}
+{% endif %}
+
+{% if current_user.is_authenticated %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <span class="navbar-brand"> <a class="nav-link active" id="navbar-brand-header" aria-current="page"
+                href="{{url_for('home')}}">
+                <img src="/static/logo_favicon.png" class="navbar-logo" width="40px"> gallerie </a> </span>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"> </span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/"> Home </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"> Profile </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        ⚙️
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#"> Edit Profile </a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <form class="d-flex nav-link active" action="" method="">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+                        <input class="form-control me-2" type="search" placeholder="search" aria-label="Search"
+                            name="username">
+                        <button class="btn btn-outline-success" type="submit" hidden> Search </button>
+                    </form>
+                </li>
+                <li class="nav-item">
+                    <form action="{{url_for('login.destroy')}}" method="POST" class="d-flex nav-link active">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+                        <input class="form-control me-2 login-out-btn" type="submit" value="log out" />
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{% endif %}

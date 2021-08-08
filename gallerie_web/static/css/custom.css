@@ -24,3 +24,10 @@ footer {
 h1 {
   font-family: Style Script;
 }
+
+#navbar-brand-header {
+  font-family: Style Script;
+  color: black;
+  font-size: 30px;
+  padding-left: 10px;
+}

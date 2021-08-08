@@ -33,8 +33,9 @@
 </head>
 
 <body>
-
+  {% include "navbar.html" %}
   {% for message in get_flashed_messages() %}
+
   <h6> <mark> {{message}} </mark> </h6>
   {% endfor %}
 

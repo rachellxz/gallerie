@@ -31,8 +31,9 @@ def create():
         if result:
             remember = True if request.form.get("remember") else False
             login_user(valid_user, remember=remember)
-            flash("Login successful. Welcome back!")
-            return redirect(url_for("login.home"))
+            flash(
+                f"Login successful. Welcome back, {current_user.first_name}!")
+            return redirect(url_for("home"))
         else:
             flash("The password you entered is incorrect. Please try again.")
             return render_template("login/new.html",
@@ -42,11 +43,11 @@ def create():
         return render_template("login/new.html")
 
 
-@login_blueprint.route("/home")
-@login_required
-def home():
-    return render_template("login/home.html",
-                           first_name=current_user.first_name)
+# @login_blueprint.route("/home")
+# @login_required
+# def home():
+#     return render_template("login/home.html",
+#                            first_name=current_user.first_name)
 
 
 #log out / destroy session
