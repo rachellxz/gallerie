@@ -101,3 +101,5 @@ def destroy():
 #     else:
 #         flash("The username does not exist.")
 #         return render_template("login/new.html")
+
+# edit user profile

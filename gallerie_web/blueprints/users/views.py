@@ -1,5 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.user import User
+from flask_login import login_user, login_required, current_user
+from app import app
+import datetime
 
 users_blueprint = Blueprint('users', __name__, template_folder='templates')
 
@@ -59,11 +62,39 @@ def index():
     return "USERS"
 
 
-@users_blueprint.route('/<id>/edit', methods=['GET'])
-def edit(id):
-    pass
+@users_blueprint.route("/edit")
+@login_required
+def edit():
+    user = User.get_or_none(User.username == current_user.username)
+    if current_user == user:
+        return render_template("users/edit.html")
+    else:
+        flash("Hmm, something went wrong. Please try again")
+        return redirect(url_for("users.edit"))
 
 
-@users_blueprint.route('/<id>', methods=['POST'])
-def update(id):
-    pass
+@users_blueprint.route("/update", methods=["POST"])
+@login_required
+def update():
+    first_name = request.form.get("first_name")
+    last_name = request.form.get("last_name")
+    email = request.form.get("email")
+    username = request.form.get("username")
+
+    # check that all fields are entered
+    if not first_name or not last_name:
+        flash("Please ensure all fields are entered.")
+        return redirect(url_for("users.edit"))
+
+    updated_at = datetime.datetime.now()
+
+    update_query = User.update(
+        first_name=first_name,
+        last_name=last_name,
+        username=username,
+        email=email,
+        updated_at=updated_at).where(User.username == current_user.username)
+
+    if update_query.execute():
+        flash("User details successfully saved.")
+        return redirect(url_for('users.edit'))
