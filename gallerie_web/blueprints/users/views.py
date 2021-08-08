@@ -152,7 +152,7 @@ def upload():
             User.username == current_user.username)
 
         if query.execute():
-            print("Profile Pic Saved!")
+            # print("Profile Pic Saved!")
             flash("Profile pic updated!")
             return redirect(
                 url_for("users.show", username=current_user.username))
@@ -166,3 +166,12 @@ def upload():
 
 
 # delete profile pic
+@users_blueprint.route("/delete", methods=["POST"])
+def delete():
+    default_img_path = app.config["DEFAULT_IMG_PATH"]
+
+    query = User.update(profile_img_url=default_img_path).where(
+        User.username == current_user.username)
+    if query.execute():
+        flash("Profile pic removed!")
+        return redirect(url_for("users.show", username=current_user.username))
