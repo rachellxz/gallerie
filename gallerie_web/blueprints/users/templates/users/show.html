@@ -19,7 +19,7 @@ edit profile
         </div>
         {% if user.username == current_user.username %}
         <div>
-            <form action="" method="POST">
+            <form action="{{url_for('feed.delete', id=i.id)}}" method="POST">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
                 <input type="submit" value="delete" />
             </form>

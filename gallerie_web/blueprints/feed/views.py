@@ -22,19 +22,21 @@ def new():
 
 
 # upload image to feed
-@feed_blueprint.route("/create", methods=["POST"])
+@feed_blueprint.route("/<username>/create", methods=["POST"])
 @login_required
-def create():
+def create(username):
+
+    username = current_user.username
 
     if "user_file" not in request.files:
         flash("No file selected!")
-        return redirect(url_for('users.show', username=current_user.username))
+        return redirect(url_for('users.show', username=username))
 
     file = request.files["user_file"]
 
     if file.filename == "":
         flash("Please select an image with valid filename to upload.")
-        return redirect(url_for('users.show', username=current_user.username))
+        return redirect(url_for('users.show', username=username))
 
     if file and allowed_file(file.filename):
         file.filename = secure_filename(file.filename)
@@ -46,12 +48,20 @@ def create():
 
         if new_user_feed.save():
             flash("Your post has been successfully uploaded!")
-            return redirect(
-                url_for('users.show', username=current_user.username))
+            return redirect(url_for('users.show', username=username))
 
 
 # delete image from feed
-@feed_blueprint.route("/delete", methods=["POST"])
+@feed_blueprint.route("/delete/<id>", methods=["POST"])
 @login_required
 def delete(id):
-    pass
+    username = current_user.username
+
+    img_to_delete = Feed.get_or_none(Feed.id == id)
+
+    if img_to_delete.delete_instance():
+        flash("Image deleted from your feed!")
+        return redirect(url_for('users.show', username=username))
+    else:
+        flash("Something went wrong.")
+        return redirect(url_for('users.show', username=username))
