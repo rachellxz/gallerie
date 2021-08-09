@@ -133,7 +133,7 @@ def search():
 
 @users_blueprint.route("/", methods=["GET"])
 def index():
-    return "USERS"
+    return redirect(url_for("home"))
 
 
 # upload profile pic
@@ -188,3 +188,24 @@ def delete():
     else:
         flash("An error seems to have occured. Please try again.")
         return render_template("users/edit.html")
+
+
+# toggle privacy settings
+@users_blueprint.route("/<username>/privacy", methods=["POST"])
+def toggle(username):
+    username = current_user.username
+    user = User.get_or_none(User.username == username)
+
+    if user.public_profile == True:
+        update_privacy = User.update(public_profile=False).where(
+            User.username == username)
+    else:
+        update_privacy = User.update(public_profile=True).where(
+            User.username == username)
+
+    if update_privacy.execute():
+        flash("Privacy settings have been updated!")
+        return redirect(url_for("users.edit", username=username))
+    else:
+        flash("Hmm, something went wrong. Please try again!")
+        return redirect(url_for("users.edit", username=username))

@@ -18,7 +18,7 @@ class User(BaseModel, UserMixin):
     profile_img_url = pw.TextField(
         default="http://gram0721.s3.amazonaws.com/default_profile_img.png")
 
-    # public_profile = pw.BooleanField(default=True)
+    public_profile = pw.BooleanField(default=True)
 
     def validate(self):
         # check if email is unique

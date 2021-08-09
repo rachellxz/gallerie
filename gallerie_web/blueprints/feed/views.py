@@ -33,6 +33,7 @@ def create(username):
         return redirect(url_for('users.show', username=username))
 
     file = request.files["user_file"]
+    img_description = request.form["img_description"]
 
     if file.filename == "":
         flash("Please select an image with valid filename to upload.")
@@ -44,7 +45,9 @@ def create(username):
         output = upload_file_to_s3(file, app.config["S3_BUCKET"])
 
         # save the img URL path to new_user_feed in the Feed table, current_user.id as the user_id
-        new_user_feed = Feed(user=current_user.id, image_url=str(output))
+        new_user_feed = Feed(user=current_user.id,
+                             image_url=str(output),
+                             img_description=img_description)
 
         if new_user_feed.save():
             flash("Your post has been successfully uploaded!")
