@@ -11,7 +11,10 @@ class Config(object):
     S3_KEY = os.environ.get("S3_ACCESS_KEY")
     S3_SECRET = os.environ.get("S3_SECRET_ACCESS_KEY")
     S3_LOCATION = 'http://{}.s3.amazonaws.com/'.format(S3_BUCKET)
-    DEFAULT_IMG_PATH = "http://gram0721.s3.amazonaws.com/default_profile_img.png"
+    DEFAULT_IMG_PATH = os.environ.get("DEFAULT_IMG_PATH")
+
+    G_CLIENT_ID = os.environ.get("G_CLIENT_ID")
+    G_CLIENT_SECRET = os.environ.get("G_CLIENT_SECRET")
 
 
 class ProductionConfig(Config):
