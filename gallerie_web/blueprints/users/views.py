@@ -65,17 +65,18 @@ def create():
                                errors=new_user.errors)
 
 
-@users_blueprint.route("/edit")
+@users_blueprint.route("/<username>/edit", methods=["GET"])
 @login_required
-def edit():
-    user = User.get_or_none(User.username == current_user.username)
+def edit(username):
+    user = User.get_or_none(User.username == username)
+
     if current_user == user:
         return render_template("users/edit.html")
     else:
-        flash("Hmm, something went wrong. Please try again")
-        return redirect(url_for("users.edit"))
+        return redirect(url_for("users.edit", username=current_user.username))
 
 
+# save user details
 @users_blueprint.route("/update", methods=["POST"])
 @login_required
 def update():
@@ -95,7 +96,7 @@ def update():
 
     if update_query.execute():
         flash("User details successfully saved.")
-        return redirect(url_for("users.edit"))
+        return redirect(url_for("users.edit", username=current_user.username))
     else:
         # still need to check for errors (validation - e.g., if username or email is not unique)
         flash("Changes could not be saved. Please try again.")
@@ -137,7 +138,8 @@ def index():
 
 # upload profile pic
 @users_blueprint.route("/upload", methods=["POST"])
-def upload():
+@login_required
+def upload(username):
     if "user_file" not in request.files:
         flash("No user_file key in request.files")
         return render_template("users/edit.html")
@@ -161,14 +163,16 @@ def upload():
 
         if query.execute():
             flash("Profile pic updated!")
-            return redirect(url_for("users.edit"))
+            return redirect(
+                url_for("users.edit", username=current_user.username))
         else:
             flash("Hmm, something went wrong. Please try again!")
-            return redirect(url_for("users.edit"))
+            return redirect(
+                url_for("users.edit", username=current_user.username))
 
     else:
         flash("Hmm, an error seems to have occurred. Please try again.")
-        return redirect(url_for("users.edit"))
+        return redirect(url_for("users.edit", username=current_user.username))
 
 
 # delete profile pic
@@ -180,7 +184,7 @@ def delete():
         User.username == current_user.username)
     if query.execute():
         flash("Profile pic removed!")
-        return redirect(url_for("users.edit"))
+        return redirect(url_for("users.edit", username=current_user.username))
     else:
         flash("An error seems to have occured. Please try again.")
         return render_template("users/edit.html")

@@ -10,17 +10,20 @@ feed_blueprint = Blueprint('feed', __name__, template_folder='templates')
 
 
 @feed_blueprint.route('/', methods=["GET"])
+@login_required
 def index():
     return redirect(url_for('home'))
 
 
 @feed_blueprint.route("/new", methods=["GET"])
+@login_required
 def new():
     return redirect(url_for("home"))
 
 
 # upload image to feed
 @feed_blueprint.route("/create", methods=["POST"])
+@login_required
 def create():
 
     if "user_file" not in request.files:
@@ -47,4 +50,8 @@ def create():
                 url_for('users.show', username=current_user.username))
 
 
-# show profile with feed
+# delete image from feed
+@feed_blueprint.route("/delete", methods=["POST"])
+@login_required
+def delete(id):
+    pass

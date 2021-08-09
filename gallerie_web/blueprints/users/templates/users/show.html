@@ -17,12 +17,14 @@ edit profile
             <br>
             {{ i.created_at.date() }}
         </div>
+        {% if user.username == current_user.username %}
         <div>
             <form action="" method="POST">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
                 <input type="submit" value="delete" />
             </form>
         </div>
+        {% endif %}
     </ol>
     {% endfor %}
 
