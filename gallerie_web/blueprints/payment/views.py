@@ -7,7 +7,6 @@ from models.feed import *
 payment_blueprint = Blueprint("payment", __name__, template_folder="templates")
 
 
-
 @payment_blueprint.route("/create", methods=["POST"])
 @login_required
 def create():

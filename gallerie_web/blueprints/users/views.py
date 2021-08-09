@@ -5,6 +5,7 @@ from models.user import User
 from models.feed import Feed
 from gallerie_web.util.helpers import upload_file_to_s3, allowed_file
 from gallerie_web.util.google_oauth import *
+from gallerie_web.util.payment import gateway
 from werkzeug.utils import secure_filename
 import datetime
 import string
@@ -257,9 +258,11 @@ def create_google_account():
 def view(username, id):
     user = User.get_or_none(User.username == username)
     image = Feed.get_or_none(Feed.id == id)
+    # token = gateway.client_token.generate()
 
     if image:
         return render_template("users/view.html", user=user, image=image)
+        #    token=token)
     else:
         flash("Hmm, an error occurred. Please try again.")
         return redirect(url_for("home"))
