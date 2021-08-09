@@ -30,12 +30,13 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ url_for('payment.create', id=image.id)}}" method="POST" id="donationform">
+                        <form action="{{ url_for('payment.create', id=image.id, username=user.username)}}" method="POST"
+                            id="donationform">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
-                            <input type="hidden" name="nonce" id="nonce-input" />
+                            <input type="hidden" name="nonce" id="nonce-field" />
+                            <div id="payment-container"> </div>
                             <label for="amount"> Contribution amount:</label>
                             <input type="number" step=".01" min="0" placeholder="$" name="amount" required />
-                            <div id="payment-container"> </div>
                             <button type="submit" class="btn btn-primary" id="pay-btn"> Make Donation </button>
                         </form>
 
@@ -49,8 +50,8 @@
                                 braintreeButton.onClick = () => {
                                     event.preventDefault()
                                     paymentForm.requestPaymentMethod((error, payload) => {
-                                        document.getElementById("nonce-input").value = payload.nonce
-                                        contributionform.submit()
+                                        document.getElementById("nonce-field").value = payload.nonce
+                                        donationform.submit()
                                     })
                                 }
                             }
