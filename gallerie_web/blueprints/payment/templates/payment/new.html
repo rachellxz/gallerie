@@ -1,0 +1,40 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+payment
+{% endblock %}
+{% block content %}
+<div>
+
+    <form action="{{ url_for('payment.create')}}" method="POST" id="contributionform">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+        <div id="payment-cont">
+            <input type="hidden" name="nonce" />
+            <label for="amount"> Contribution amount:</label>
+            <input type="number" step=".01" min="0" placeholder="$" name="amount" />
+            <input type="submit" value="Contribute" id="pay-btn" />
+        </div>
+    </form>
+
+</div>
+
+<script type="text/javascript">
+    const braintreeButton = document.getElementById("pay-btn")
+
+    braintree.dropin.create({
+        container: document.getElementById("payment-cont"),
+        authorization: "{{token}}"
+    }, (error, paymentForm) => {
+        braintreeButton.onClick = () => {
+            event.preventDefault()
+            paymentForm.requestPaymentMethod((error, payload) => {
+                document.getElementById("nonce-field").value = payload.nonce
+                contributionform.submit()
+            })
+        }
+    }
+    )
+</script>
+
+
+{% endblock %}

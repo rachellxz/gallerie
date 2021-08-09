@@ -4,6 +4,7 @@ from models.feed import Feed
 from flask_login import login_user, login_required, current_user
 from app import app
 from gallerie_web.util.helpers import upload_file_to_s3, allowed_file
+from gallerie_web.util.payment import *
 from werkzeug.utils import secure_filename
 
 feed_blueprint = Blueprint('feed', __name__, template_folder='templates')

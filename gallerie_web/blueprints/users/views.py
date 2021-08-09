@@ -20,6 +20,7 @@ def new():
     return render_template('users/new.html')
 
 
+# create new account
 @users_blueprint.route('/new', methods=['POST'])
 def create():
     first_name = request.form.get("first_name")
@@ -66,6 +67,7 @@ def create():
                                errors=new_user.errors)
 
 
+# edit user profile
 @users_blueprint.route("/<username>/edit", methods=["GET"])
 @login_required
 def edit(username):
@@ -77,7 +79,7 @@ def edit(username):
         return redirect(url_for("users.edit", username=current_user.username))
 
 
-# save user details
+# save changed user details
 @users_blueprint.route("/update", methods=["POST"])
 @login_required
 def update():
@@ -178,6 +180,7 @@ def upload():
 
 # delete profile pic
 @users_blueprint.route("/delete", methods=["POST"])
+@login_required
 def delete():
     default_img_path = app.config["DEFAULT_IMG_PATH"]
 
@@ -193,6 +196,7 @@ def delete():
 
 # toggle privacy settings
 @users_blueprint.route("/<username>/privacy", methods=["POST"])
+@login_required
 def toggle(username):
     username = current_user.username
     user = User.get_or_none(User.username == username)
@@ -246,3 +250,16 @@ def create_google_account():
     else:
         flash("An error occurred. Please try again!")
         return redirect(url_for("users.new"))
+
+
+# view user's individual post
+@users_blueprint.route("/<username>/<id>", methods=["GET"])
+def view(username, id):
+    user = User.get_or_none(User.username == username)
+    image = Feed.get_or_none(Feed.id == id)
+
+    if image:
+        return render_template("users/view.html", user=user, image=image)
+    else:
+        flash("Hmm, an error occurred. Please try again.")
+        return redirect(url_for("home"))
