@@ -9,7 +9,24 @@ edit profile
 
 <img src="{{ user.profile_img_url }}" width="80px" id="profile-img" style="border-radius: 50%">
 
+<div>
+    {% for i in feed %}
+    <ol style="list-style-type:none;">
+        <div>
+            <li> <img src="{{ i.image_url }}" width="100px" /> </li>
+            <br>
+            {{ i.created_at.date() }}
+        </div>
+        <div>
+            <form action="" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+                <input type="submit" value="delete" />
+            </form>
+        </div>
+    </ol>
+    {% endfor %}
 
+</div>
 
 
 {% endblock %}

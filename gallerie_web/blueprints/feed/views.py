@@ -22,17 +22,16 @@ def new():
 # upload image to feed
 @feed_blueprint.route("/create", methods=["POST"])
 def create():
-    user = User.get_or_none(User.username == current_user.username)
 
     if "user_file" not in request.files:
         flash("No file selected!")
-        return render_template("users/show.html", user=user)
+        return redirect(url_for('users.show', username=current_user.username))
 
     file = request.files["user_file"]
 
     if file.filename == "":
         flash("Please select an image with valid filename to upload.")
-        return render_template("users/show.html", user=user)
+        return redirect(url_for('users.show', username=current_user.username))
 
     if file and allowed_file(file.filename):
         file.filename = secure_filename(file.filename)
@@ -46,3 +45,6 @@ def create():
             flash("Your post has been successfully uploaded!")
             return redirect(
                 url_for('users.show', username=current_user.username))
+
+
+# show profile with feed

@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.user import User
+from models.feed import Feed
 from flask_login import login_user, login_required, current_user
 from app import app
 from gallerie_web.util.helpers import upload_file_to_s3, allowed_file
@@ -105,8 +106,12 @@ def update():
 @users_blueprint.route("/<username>", methods=["GET"])
 def show(username):
     user = User.get_or_none(User.username == username)
+    feed = Feed.select(Feed, User).join(User).where(
+        User.username == username).order_by(Feed.created_at.desc())
+
     if user:
-        return render_template("users/show.html", user=user)
+        return render_template("users/show.html", user=user, feed=feed)
+
     else:
         flash("This account doesn't exist.")
         return redirect(url_for("home"))
