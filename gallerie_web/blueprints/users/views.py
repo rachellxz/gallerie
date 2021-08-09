@@ -258,11 +258,13 @@ def create_google_account():
 def view(username, id):
     user = User.get_or_none(User.username == username)
     image = Feed.get_or_none(Feed.id == id)
-    # token = gateway.client_token.generate()
+    token = gateway.client_token.generate()
 
     if image:
-        return render_template("users/view.html", user=user, image=image)
-        #    token=token)
+        return render_template("users/view.html",
+                               user=user,
+                               image=image,
+                               token=token)
     else:
         flash("Hmm, an error occurred. Please try again.")
         return redirect(url_for("home"))

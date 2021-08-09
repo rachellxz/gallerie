@@ -1,6 +1,5 @@
 from models.base_model import BaseModel
 import peewee as pw
-from collections import defaultdict
 import re
 from playhouse.postgres_ext import PostgresqlExtDatabase
 from werkzeug.security import generate_password_hash

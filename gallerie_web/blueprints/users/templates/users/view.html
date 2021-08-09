@@ -16,6 +16,8 @@
     {% if image.img_description%}
     {{image.img_description}}
     {% endif %}
+
+    {% if user.username != current_user.username %}
     <div>
         <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#donate"> Donate
         </button>
@@ -28,43 +30,39 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ url_for('payment.create')}}" method="POST" id="contributionform">
+                        <form action="{{ url_for('payment.create', id=image.id)}}" method="POST" id="donationform">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
-                            <div id="payment-cont">
-                                <input type="hidden" name="nonce" />
-                                <label for="amount"> Contribution amount:</label>
-                                <input type="number" step=".01" min="0" placeholder="$" name="amount" required />
-                            </div>
+                            <input type="hidden" name="nonce" id="nonce-input" />
+                            <label for="amount"> Contribution amount:</label>
+                            <input type="number" step=".01" min="0" placeholder="$" name="amount" required />
+                            <div id="payment-container"> </div>
+                            <button type="submit" class="btn btn-primary" id="pay-btn"> Make Donation </button>
+                        </form>
+
+                        <script type="text/javascript">
+                            const braintreeButton = document.getElementById("pay-btn")
+
+                            braintree.dropin.create({
+                                container: document.getElementById("payment-container"),
+                                authorization: "{{token}}"
+                            }, (error, paymentForm) => {
+                                braintreeButton.onClick = () => {
+                                    event.preventDefault()
+                                    paymentForm.requestPaymentMethod((error, payload) => {
+                                        document.getElementById("nonce-input").value = payload.nonce
+                                        contributionform.submit()
+                                    })
+                                }
+                            }
+                            )
+                        </script>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type="submit" class="btn btn-primary" value="Make Donation" id="pay-btn" />
-                    </div>
-                    </form>
                 </div>
             </div>
         </div>
-
-
     </div>
+
+    {% endif %}
 </main>
 
 {% endblock %}
-
-<script type="text/javascript">
-    const braintreeButton = document.getElementById("pay-btn")
-
-    braintree.dropin.create({
-        container: document.getElementById("payment-cont"),
-        authorization: "{{token}}"
-    }, (error, paymentForm) => {
-        braintreeButton.onClick = () => {
-            event.preventDefault()
-            paymentForm.requestPaymentMethod((error, payload) => {
-                document.getElementById("nonce-field").value = payload.nonce
-                contributionform.submit()
-            })
-        }
-    }
-    )
-</script>
