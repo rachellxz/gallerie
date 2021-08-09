@@ -9,16 +9,15 @@ edit profile
 <div>
     <h3> {{current_user.first_name}}'s Current Details </h3>
 
-    <input type="image" name="profile-pic" src={{current_user.profile_img_url}} width="80px"
-        class="small-profile-pic edit-profile-pic" data-bs-toggle="modal" data-bs-target="#upload-profile-pic" />
+    <input type="image" name="profile-pic" src={{current_user.profile_img_url}} width="80px" style="border-radius: 50%"
+        id="edit-profile-img" data-bs-toggle="modal" data-bs-target="#upload-profile-pic" />
 
     {% if current_user.profile_img_url != "http://gram0721.s3.amazonaws.com/default_profile_img.png" %}
     <form action="{{ url_for('users.delete')}}" , method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
         <input type="submit" value="delete img">
     </form>
-
-    {% else %}
+    {% endif %}
     <div class="modal fade" id="upload-profile-pic" tabindex="-1" aria-labelledby="upload-profile-pic"
         aria-hidden="true">
         <div class="modal-dialog">
@@ -47,7 +46,7 @@ edit profile
             </div>
         </div>
     </div>
-    {% endif %}
+
     <div>
         <form action="{{url_for('users.update')}}" method="POST">
             <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />

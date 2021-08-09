@@ -2,11 +2,15 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.user import User
 from flask_login import login_user, login_required, current_user
 from app import app
-import datetime
 from gallerie_web.util.helpers import upload_file_to_s3, allowed_file
 from werkzeug.utils import secure_filename
+import datetime
+# import string
+# import random
 
 users_blueprint = Blueprint('users', __name__, template_folder='templates')
+
+# chars = string.ascii_letters + string.punctuation
 
 
 @users_blueprint.route('/new', methods=['GET'])
@@ -129,9 +133,6 @@ def index():
 # upload profile pic
 @users_blueprint.route("/upload", methods=["POST"])
 def upload():
-    user = User.get_or_none(User.username == current_user.username)
-    img_path = user.profile_img_url
-
     if "user_file" not in request.files:
         flash("No user_file key in request.files")
         return render_template("users/edit.html")
@@ -143,7 +144,9 @@ def upload():
         return render_template("users/edit.html")
 
     if file and allowed_file(file.filename):
+        # random_string = ''.join(random.choice(chars) for i in range(15))
         file.filename = secure_filename(file.filename)
+
         # output is the URL path
         output = upload_file_to_s3(file, app.config["S3_BUCKET"])
 
@@ -152,10 +155,8 @@ def upload():
             User.username == current_user.username)
 
         if query.execute():
-            # print("Profile Pic Saved!")
             flash("Profile pic updated!")
-            return redirect(
-                url_for("users.show", username=current_user.username))
+            return redirect(url_for("users.edit"))
         else:
             flash("Hmm, something went wrong. Please try again!")
             return redirect(url_for("users.edit"))
@@ -174,4 +175,7 @@ def delete():
         User.username == current_user.username)
     if query.execute():
         flash("Profile pic removed!")
-        return redirect(url_for("users.show", username=current_user.username))
+        return redirect(url_for("users.edit"))
+    else:
+        flash("An error seems to have occured. Please try again.")
+        return render_template("users/edit.html")

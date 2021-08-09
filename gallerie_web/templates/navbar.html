@@ -31,6 +31,42 @@
                     </ul>
                 </li>
 
+                <button type="button" class="btn add-img-btn me-2" data-bs-toggle="modal"
+                    data-bs-target="#upload-image">
+                    Add
+                    Image ➕
+                </button>
+
+                <div class="modal fade" id="upload-image" tabindex="-1" aria-labelledby="upload-image"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="upload-pic-modal-title"> Upload an image </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="form-temp">
+                                    <form action="{{ url_for('feed.new')}}" method="POST" enctype="multipart/form-data">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+                                        <label for="user_file"> Upload Image </label>
+                                        <br>
+                                        <br>
+                                        <input type="file" name="user_file" />
+                                        <br>
+                                        <br>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="submit" value="Upload"> </input>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
                 <li class="nav-item">
                     <form class="d-flex nav-link active" action="{{url_for('users.search')}}" method="POST">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />

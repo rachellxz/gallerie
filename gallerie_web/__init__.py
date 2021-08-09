@@ -2,6 +2,7 @@ from app import app
 from flask import render_template
 from gallerie_web.blueprints.users.views import users_blueprint
 from gallerie_web.blueprints.login.views import login_blueprint
+from gallerie_web.blueprints.feed.views import feed_blueprint
 from flask_assets import Environment, Bundle
 from .util.assets import bundles
 
@@ -10,6 +11,7 @@ assets.register(bundles)
 
 app.register_blueprint(users_blueprint, url_prefix="/users")
 app.register_blueprint(login_blueprint, url_prefix="/login")
+app.register_blueprint(feed_blueprint, url_prefix="/feed")
 
 
 @app.errorhandler(500)
