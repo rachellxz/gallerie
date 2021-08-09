@@ -78,8 +78,8 @@
                 <li class="nav-item">
                     <form class="d-flex nav-link active" action="{{url_for('users.search')}}" method="POST">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
-                        <input required class="form-control me-2" type="search" placeholder="search" aria-label="Search"
-                            name="username">
+                        <input required class="form-control me-2" type="search" placeholder="search user"
+                            aria-label="Search User" name="username">
                         <input class="btn btn-outline-success" type="submit" hidden />
                     </form>
                 </li>

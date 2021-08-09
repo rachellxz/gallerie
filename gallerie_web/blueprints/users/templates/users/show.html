@@ -11,6 +11,8 @@ edit profile
 <br><br>
 
 <div>
+    {% if user.username == current_user.username or user.public_profile %}
+
     {% for i in feed %}
     <ol style="list-style-type:none;">
         <div>
@@ -32,6 +34,11 @@ edit profile
         {% endif %}
     </ol>
     {% endfor %}
+    {% else %}
+    <div>
+        {{ user.username }}'s gallerie is private! Send a follow request to see {{ user.first_name }}'s gallerie.
+    </div>
+    {% endif %}
 
 </div>
 
