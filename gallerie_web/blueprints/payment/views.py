@@ -29,4 +29,4 @@ def create(id, username):
         return redirect(url_for("users.view", username=username, id=id))
     else:
         flash("An error occurred.")
-        return redirect(url_for("home"))
+        return redirect(url_for("users.view", username=username, id=id))

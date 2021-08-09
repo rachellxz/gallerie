@@ -21,6 +21,8 @@
     <div>
         <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#donate"> Donate
         </button>
+        <br>
+        <a href="{{url_for('users.show', username=user.username)}}"> Back to {{user.first_name}}'s' profile </a>
 
         <div class="modal fade" id="donate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-fullscreen">
