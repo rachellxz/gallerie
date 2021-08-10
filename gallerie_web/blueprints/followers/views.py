@@ -7,7 +7,6 @@ followers_blueprint = Blueprint("followers",
                                 __name__,
                                 template_folder="templates")
 
-
 # follow user
 @followers_blueprint.route("/create", methods=["POST"])
 @login_required

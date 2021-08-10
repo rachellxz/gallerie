@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, login_required, current_user
 from models.user import User
 from models.feed import Feed
+from models.follow import Follow
 from gallerie_web.util.helpers import upload_file_to_s3, allowed_file
 from gallerie_web.util.google_oauth import *
 from gallerie_web.util.payment import gateway
@@ -114,8 +115,32 @@ def show(username):
     feed = Feed.select(Feed, User).join(User).where(
         User.username == username).order_by(Feed.created_at.desc())
 
+    # show user's following and follower count:
+    show_following = User.select().join(Follow,
+                                        on=Follow.artist_id == User.id).where(
+                                            Follow.follower_id == user.id,
+                                            Follow.approved == True)
+
+    show_followers = User.select().join(
+        Follow,
+        on=Follow.follower_id == User.id).where(Follow.artist_id == user.id,
+                                                Follow.approved == True)
+
+    following_count = show_following.count()
+    follower_count = show_followers.count()
+
+    # to check if current_user is following user
+    following_status = Follow.get_or_none(Follow.follower == current_user.id,
+                                          Follow.artist == user.id)
+
     if user:
-        return render_template("users/show.html", user=user, feed=feed)
+        return render_template("users/show.html",
+                               user=user,
+                               feed=feed,
+                               show_following=show_following,
+                               following_count=following_count,
+                               follower_count=follower_count,
+                               following_status=following_status)
 
     else:
         flash("This account doesn't exist.")
@@ -127,11 +152,13 @@ def show(username):
 def search():
 
     username = request.form["username"].lower()
+    # check if username exists in database
+    valid_user = User.get_or_none(User.username == username)
 
-    if username:
+    if valid_user:
         return redirect(url_for('users.show', username=username))
     else:
-        flash("Hmm, an error occured. Please try again.")
+        flash("This account does not exist.")
         return redirect(url_for("home"))
 
 
@@ -266,7 +293,7 @@ def view(username, id):
                                image=image,
                                token=token)
     else:
-        flash("Hmm, an error occurred. Please try again.")
+        flash("Hmm, we can't seem to find this post. Please try again.")
         return redirect(url_for("home"))
 
 
@@ -275,3 +302,6 @@ def view(username, id):
 @login_required
 def show_followers(username):
     return username
+
+
+# show who user is following

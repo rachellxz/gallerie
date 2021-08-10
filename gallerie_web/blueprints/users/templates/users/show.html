@@ -9,22 +9,29 @@
 
 <img src="{{ user.profile_img_url }}" width="80px" id="profile-img" style="border-radius: 50%">
 <br><br>
+Following: {{ following_count }}
+<br>
+Followers: {{ follower_count }}
 
 <div>
     {% if user.username != current_user.username%}
+    {% if not following_status.approved %}
+
     <form action="{{url_for('followers.create')}}" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
         <input type="hidden" name="artist" value="{{user.id}}" />
         <input type="hidden" name="follower" value="{{current_user.id}}" />
         <button class="btn btn-secondary" type="submit"> Follow </button>
     </form>
-
+    {% else %}
     <form action="{{url_for('followers.destroy')}}" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
         <input type="hidden" name="artist" value="{{user.id}}" />
         <input type="hidden" name="follower" value="{{current_user.id}}" />
         <button class="btn btn-secondary" type="submit"> Unfollow </button>
     </form>
+    <br>
+    {% endif %}
 
     {%endif%}
 
