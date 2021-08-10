@@ -1,10 +1,15 @@
 from app import app
-from flask import render_template
+from flask import render_template, redirect, url_for
 from gallerie_web.blueprints.users.views import users_blueprint
 from gallerie_web.blueprints.login.views import login_blueprint
 from gallerie_web.blueprints.feed.views import feed_blueprint
 from gallerie_web.blueprints.payment.views import payment_blueprint
 from gallerie_web.blueprints.followers.views import followers_blueprint
+from models.user import *
+from models.follow import *
+from models.feed import *
+from peewee import prefetch
+from flask_login import current_user, login_required
 from flask_assets import Environment, Bundle
 from .util.assets import bundles
 
@@ -38,6 +43,27 @@ def unauthorized_entry(e):
     return render_template('405.html'), 405
 
 
+# homepage: view posts from followed users
 @app.route("/home")
+@login_required
 def home():
-    return render_template('home.html')
+    user = User.get_or_none(User.id == current_user.id)
+    users = User.select()
+    feed = Feed.select().join(User, on=User.id == Feed.user_id).join(
+        Follow, on=Follow.artist_id == Feed.user_id).where(
+            (Follow.follower == user)
+            & (Follow.approved == True)).order_by(
+                Feed.created_at.desc()).prefetch(users)
+
+    return render_template("home.html", feed=feed)
+
+
+# explore page: view posts from public profiles
+@app.route("/explore")
+def explore():
+    users = User.select().where(User.public_profile == True)
+    feed = Feed.select().join(User, on=User.id == Feed.user_id).where(
+        User.public_profile == True).order_by(
+            Feed.created_at.desc()).prefetch(users)
+
+    return render_template("explore.html", feed=feed)

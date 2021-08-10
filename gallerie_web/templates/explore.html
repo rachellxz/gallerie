@@ -1,15 +1,14 @@
 {% extends "_layout.html" %}
 
 {% block title %}
-Home
+Homepage
 {% endblock %}
 
 {% block header %}
 {% endblock %}
 
 {% block content %}
-<h2> Home </h2>
-
+<h2> Explore </h2>
 <div>
     <div>
         {% for post in feed %}
@@ -29,6 +28,7 @@ Home
         </div>
         {% endfor %}
     </div>
+</div>
 </div>
 
 {% endblock %}
