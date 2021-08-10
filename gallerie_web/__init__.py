@@ -30,8 +30,7 @@ def internal_server_error(e):
 
 @app.errorhandler(401)
 def unauthorized_entry(e):
-    flash("Make sure you are logged in!")
-    return render_template('401.html'), 401
+    return redirect(url_for("login.new"))
 
 
 @app.errorhandler(404)
@@ -40,7 +39,7 @@ def page_not_found(e):
 
 
 @app.errorhandler(405)
-def unauthorized_entry(e):
+def method_not_allowed(e):
     return render_template('405.html'), 405
 
 
@@ -72,4 +71,4 @@ def explore():
 
 @app.route("/")
 def index():
-    return render_template("landing.html")
+    return redirect(url_for("home"))
