@@ -9,8 +9,8 @@ Home
 
 {% block content %}
 <h2> Home </h2>
-
-<div>
+{% if feed %}
+<main>
     <div>
         {% for post in feed %}
         <div>
@@ -29,6 +29,11 @@ Home
         </div>
         {% endfor %}
     </div>
-</div>
+</main>
+{% else %}
+
+Start following artists to view their galleries!
+
+{% endif %}
 
 {% endblock %}

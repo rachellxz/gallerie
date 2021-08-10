@@ -7,12 +7,20 @@ following
 {% block content %}
 <h2> {{user.first_name}} is following: </h2>
 
-{% for profile in following %}
+{% if following %}
 <ul style="list-style-type:none;">
-    <a href="{{url_for('users.show', username=profile.username)}}"> <img src="{{profile.profile_img_url}}"
-            style="border-radius: 50%; width: 70px" /> {{profile.username}} </a>
+    {% for profile in following %}
+    <li>
+        <a href="{{url_for('users.show', username=profile.username)}}"> <img src="{{profile.profile_img_url}}"
+                style="border-radius: 50%; width: 70px" /> {{profile.username}} </a>
+    </li>
+    <!-- <li> <button class="btn btn-outline-secondary"> Unfollow </button> </li> -->
+    {% endfor %}
 </ul>
-{% endfor %}
+
+{% else %}
+Follow some artists!
+{% endif %}
 
 <a href="{{url_for('users.show', username=user.username)}}"> Back to {{user.first_name}}'s gallerie </a>
 {% endblock %}
