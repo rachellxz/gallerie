@@ -9,9 +9,11 @@
 
 <img src="{{ user.profile_img_url }}" width="80px" id="profile-img" style="border-radius: 50%">
 <br><br>
-Following: {{ following_count }}
+<a href="{{ url_for('users.show_following', username=user.username)}}" style="text-decoration: none; color: black">
+    Following: {{ following_count }} </a>
 <br>
-Followers: {{ follower_count }}
+<a href="{{url_for('users.show_followers', username=user.username)}}" style="text-decoration: none; color: black">
+    Followers: {{ follower_count }} </a>
 
 <div>
     {% if user.username != current_user.username%}
@@ -75,11 +77,3 @@ Followers: {{ follower_count }}
 </div>
 
 {% endblock %}
-
-
-<div>
-    <form action="{{url_for('payment.new', id=i.id)}}" method="GET">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
-        <button> Contribute $$ </button>
-    </form>
-</div>

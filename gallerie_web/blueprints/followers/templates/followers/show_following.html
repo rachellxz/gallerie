@@ -1,0 +1,18 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+following
+{% endblock %}
+
+{% block content %}
+<h2> {{user.first_name}} is following: </h2>
+
+{% for profile in following %}
+<ul style="list-style-type:none;">
+    <li>{{profile.username}}</li>
+</ul>
+{% endfor %}
+
+
+<a href="{{url_for('users.show', username=user.username)}}"> Back to gallerie </a>
+{% endblock %}

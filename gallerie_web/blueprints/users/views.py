@@ -301,7 +301,26 @@ def view(username, id):
 @users_blueprint.route("/<username>/followers", methods=["GET"])
 @login_required
 def show_followers(username):
-    return username
+    user = User.get_or_none(User.username == username)
+    followers = (User.select().join(
+        Follow,
+        on=Follow.follower_id == User.id).where((Follow.artist == user)
+                                                & (Follow.approved == True)))
+    return render_template("followers/show_followers.html",
+                           user=user,
+                           followers=followers)
 
 
 # show who user is following
+@users_blueprint.route("/<username>/following", methods=["GET"])
+@login_required
+def show_following(username):
+    user = User.get_or_none(User.username == username)
+    following = (User.select().join(
+        Follow,
+        on=Follow.artist_id == User.id).where((Follow.follower == user)
+                                              & (Follow.approved == True)))
+
+    return render_template("followers/show_following.html",
+                           user=user,
+                           following=following)
