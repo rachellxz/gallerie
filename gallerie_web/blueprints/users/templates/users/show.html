@@ -15,7 +15,6 @@
 <a href="{{url_for('users.show_followers', username=user.username)}}" style="text-decoration: none; color: black">
     Followers: {{ follower_count }} </a>
 
-
 <div>
     {% if user.username != current_user.username%}
 
@@ -51,7 +50,7 @@
 
     {%endif%}
 
-    {% if user.username == current_user.username or user.public_profile %}
+    {% if user.username == current_user.username or user.public_profile or following_status.approved%}
 
     {% for i in feed %}
     <ol style="list-style-type:none;">

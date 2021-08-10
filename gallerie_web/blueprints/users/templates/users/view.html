@@ -7,65 +7,89 @@
 {% endblock %}
 {% block content %}
 
-{{user.first_name}}'s Post:
+{% if user.username == current_user.username %}
 
 <main>
+    {{user.first_name}}'s Post:
     <div>
         <img src="{{image.image_url}}" width="500px" />
     </div>
     {% if image.img_description%}
     {{image.img_description}}
     {% endif %}
+</main>
 
-    {% if user.username != current_user.username %}
-    <div>
+{% else %}
+{% if user.public_profile or following_status.approved %}
+
+<div>
+    <main>
+        {{user.first_name}}'s Post:
+        <div>
+            <img src="{{image.image_url}}" width="500px" />
+        </div>
+        {% if image.img_description%}
+        {{image.img_description}}
+        {% endif %}
+
         <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#donate"> Donate
         </button>
         <br>
         <a href="{{url_for('users.show', username=user.username)}}"> Back to {{user.first_name}}'s' profile </a>
+    </main>
 
-        <div class="modal fade" id="donate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-fullscreen">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Make a donation</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{ url_for('payment.create', id=image.id, username=user.username)}}" method="POST"
-                            id="donationform">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
-                            <input type="hidden" name="nonce" id="nonce-field" />
-                            <div id="payment-container"> </div>
-                            <label for="amount"> Contribution amount:</label>
-                            <input type="number" step=".01" min="0" placeholder="$" name="amount" required />
-                            <button type="submit" class="btn btn-primary" id="pay-btn"> Make Donation </button>
-                        </form>
+    <div class="modal fade" id="donate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Make a donation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url_for('payment.create', id=image.id, username=user.username)}}" method="POST"
+                        id="donationform">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+                        <input type="hidden" name="nonce" id="nonce-field" />
+                        <div id="payment-container"> </div>
+                        <label for="amount"> Contribution amount:</label>
+                        <input type="number" step=".01" min="0" placeholder="$" name="amount" required />
+                        <button type="submit" class="btn btn-primary" id="pay-btn"> Make Donation </button>
+                    </form>
 
-                        <script type="text/javascript">
-                            const braintreeButton = document.getElementById("pay-btn")
+                    <script type="text/javascript">
+                        const braintreeButton = document.getElementById("pay-btn")
 
-                            braintree.dropin.create({
-                                container: document.getElementById("payment-container"),
-                                authorization: "{{token}}"
-                            }, (error, paymentForm) => {
-                                braintreeButton.onClick = () => {
-                                    event.preventDefault()
-                                    paymentForm.requestPaymentMethod((error, payload) => {
-                                        document.getElementById("nonce-field").value = payload.nonce
-                                        donationform.submit()
-                                    })
-                                }
+                        braintree.dropin.create({
+                            container: document.getElementById("payment-container"),
+                            authorization: "{{token}}"
+                        }, (error, paymentForm) => {
+                            braintreeButton.onClick = () => {
+                                event.preventDefault()
+                                paymentForm.requestPaymentMethod((error, payload) => {
+                                    document.getElementById("nonce-field").value = payload.nonce
+                                    donationform.submit()
+                                })
                             }
-                            )
-                        </script>
-                    </div>
+                        }
+                        )
+                    </script>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    {% endif %}
+{% else %}
+
+
+<main>
+    This is a private exhibition. Follow to see {{user.first_name}}'s gallerie.
+    <br>
+    <a href="{{url_for('users.show', username=user.username)}}" style="text-decoration: none;">
+        <img src="{{user.profile_img_url}}" width="80px" style="border-radius: 50%;" />
+        {{user.first_name}}'s gallerie </a>
 </main>
 
+{% endif %}
+{% endif %}
 {% endblock %}

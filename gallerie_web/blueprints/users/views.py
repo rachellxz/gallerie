@@ -153,6 +153,26 @@ def show(username):
         return redirect(url_for("home"))
 
 
+# view user's individual post
+@users_blueprint.route("/<username>/<id>", methods=["GET"])
+def view(username, id):
+    user = User.get_or_none(User.username == username)
+    image = Feed.get_or_none(Feed.id == id)
+    token = gateway.client_token.generate()
+    following_status = Follow.get_or_none(Follow.follower == current_user.id,
+                                          Follow.artist == user.id)
+
+    if image:
+        return render_template("users/view.html",
+                               user=user,
+                               image=image,
+                               token=token,
+                               following_status=following_status)
+    else:
+        flash("Hmm, we can't seem to find this post. Please try again.")
+        return redirect(url_for("home"))
+
+
 # search profile by username
 @users_blueprint.route("/search", methods=["POST"])
 def search():
@@ -284,23 +304,6 @@ def create_google_account():
     else:
         flash("An error occurred. Please try again!")
         return redirect(url_for("users.new"))
-
-
-# view user's individual post
-@users_blueprint.route("/<username>/<id>", methods=["GET"])
-def view(username, id):
-    user = User.get_or_none(User.username == username)
-    image = Feed.get_or_none(Feed.id == id)
-    token = gateway.client_token.generate()
-
-    if image:
-        return render_template("users/view.html",
-                               user=user,
-                               image=image,
-                               token=token)
-    else:
-        flash("Hmm, we can't seem to find this post. Please try again.")
-        return redirect(url_for("home"))
 
 
 # show user's followers

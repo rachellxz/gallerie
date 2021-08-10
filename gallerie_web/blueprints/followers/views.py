@@ -85,7 +85,7 @@ def approve(id):
     if follow_request:
         follow_request.approved = True
         if follow_request.save():
-            flash(f"You have approved {follower.username}'s' follow request.")
+            flash(f"You have approved {follower.username}'s follow request.")
             return redirect(url_for("followers.edit"))
         else:
             flash("Hmm, an error occurred. Please try again.")

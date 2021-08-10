@@ -7,6 +7,11 @@ Follow Requests
 {% block content %}
 <main>
     <h2> {{user.first_name}}'s Follow Requests </h2>
+
+    {% if followers|length == 0 %}
+    No requests at the moment
+
+    {% else %}
     <div>
         {% for follower in followers %}
 
@@ -22,7 +27,6 @@ Follow Requests
                 <button class="btn btn-outline-success"> confirm </button>
             </form>
 
-
             <form action="{{url_for('followers.delete', id=follower.id)}}" method="POST">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
                 <input hidden value="{{ follower.username}}" name="follower_username" />
@@ -31,8 +35,8 @@ Follow Requests
         </ul>
 
         {%endfor%}
-
     </div>
+    {% endif %}
 
 </main>
 
