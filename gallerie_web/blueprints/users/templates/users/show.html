@@ -15,16 +15,30 @@
 <a href="{{url_for('users.show_followers', username=user.username)}}" style="text-decoration: none; color: black">
     Followers: {{ follower_count }} </a>
 
+
 <div>
     {% if user.username != current_user.username%}
-    {% if not following_status.approved %}
 
+    {% if current_user in requests %}
+    <button class="btn btn-outline-secondary" disabled> Follow Request Sent </button>
+
+    <!-- fix bug: cancel request -->
+
+    <!-- <form action="{{url_for('followers.destroy')}}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+        <input type="hidden" name="artist" value="{{user.id}}" />
+        <input type="hidden" name="follower" value="{{current_user.id}}" />
+        <button class="btn btn-secondary" type="submit"> Cancel Request </button>
+    </form> -->
+
+    {% elif not following_status.approved %}
     <form action="{{url_for('followers.create')}}" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
         <input type="hidden" name="artist" value="{{user.id}}" />
         <input type="hidden" name="follower" value="{{current_user.id}}" />
         <button class="btn btn-secondary" type="submit"> Follow </button>
     </form>
+
     {% else %}
     <form action="{{url_for('followers.destroy')}}" method="POST">
         <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />

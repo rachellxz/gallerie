@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, flash, request
+from flask import Blueprint, redirect, url_for, flash, request, render_template
 from flask_login import login_required, current_user
 from models.follow import Follow
 from models.user import User
@@ -6,6 +6,7 @@ from models.user import User
 followers_blueprint = Blueprint("followers",
                                 __name__,
                                 template_folder="templates")
+
 
 # follow user
 @followers_blueprint.route("/create", methods=["POST"])
@@ -29,7 +30,7 @@ def create():
                                         username=artist.username))
         # if artist account is private:
         else:
-            follow = Follow(artist=artist, follower=follower)
+            follow = Follow(artist=artist, follower=follower, approved=False)
             if follow.save():
                 flash(
                     f"You have submitted a follow request to {artist.username}"
@@ -53,7 +54,35 @@ def destroy():
                                and Follow.follower_id == follower.id)
     if query.delete_instance():
         flash(f"You are no longer following {artist.username}")
-        return redirect(url_for("users.show", username=artist.username))
+        return redirect(url_for("users.show", username=follower.username))
     else:
         flash(f"Hmm, an error occurred. Please try again.")
-        return redirect(url_for("users.show", username=artist.username))
+        return redirect(url_for("users.show", username=follower.username))
+
+
+# follow request form
+@followers_blueprint.route("/requests", methods=["GET"])
+@login_required
+def edit():
+    user = User.get_or_none(User.username == current_user.username)
+    followers = (User.select().join(
+        Follow,
+        on=Follow.follower_id == User.id).where((Follow.artist == user)
+                                                & (Follow.approved == False)))
+    return render_template("followers/edit.html",
+                           user=user,
+                           followers=followers)
+
+
+# approve follow request
+@followers_blueprint.route("/<id>", methods=["POST"])
+@login_required
+def approve():
+    pass
+
+
+# reject follow request
+@followers_blueprint.route("/<id>", methods=["POST"])
+@login_required
+def reject():
+    pass

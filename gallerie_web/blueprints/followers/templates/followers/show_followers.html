@@ -10,7 +10,8 @@ followers
 
 {% for profile in followers %}
 <ul style="list-style-type:none;">
-    <li>{{profile.username}}</li>
+    <a href="{{url_for('users.show', username=profile.username)}}"> <img src="{{profile.profile_img_url}}"
+            style="border-radius: 50%; width: 70px" /> {{profile.username}} </a>
 </ul>
 {% endfor %}
 

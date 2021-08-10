@@ -1,0 +1,20 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+Follow Requests
+{% endblock %}
+
+{% block content %}
+<h2> Follow Requests </h2>
+{{user.first_name}}'s Follow Requests:
+
+{% for follower in followers %}
+
+<ul style="list-style-type:none;">
+    <a href="{{url_for('users.show', username=follower.username)}}"> <img src="{{follower.profile_img_url}}"
+            style="border-radius: 50%; width: 70px" /> {{follower.username}} </a>
+</ul>
+
+{%endfor%}
+
+{% endblock %}

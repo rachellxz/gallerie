@@ -9,10 +9,10 @@ following
 
 {% for profile in following %}
 <ul style="list-style-type:none;">
-    <li>{{profile.username}}</li>
+    <a href="{{url_for('users.show', username=profile.username)}}"> <img src="{{profile.profile_img_url}}"
+            style="border-radius: 50%; width: 70px" /> {{profile.username}} </a>
 </ul>
 {% endfor %}
 
-
-<a href="{{url_for('users.show', username=user.username)}}"> Back to gallerie </a>
+<a href="{{url_for('users.show', username=user.username)}}"> Back to {{user.first_name}}'s gallerie </a>
 {% endblock %}

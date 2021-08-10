@@ -30,7 +30,14 @@
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item" href="{{url_for('users.edit', username=current_user.username)}}">
                                 Edit Profile </a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+
+                        <li><a class="dropdown-item" href="{{url_for('followers.edit')}}">
+                                Follow Requests </a></li>
                     </ul>
+
                 </li>
 
                 <button type="button" class="btn add-img-btn me-2" data-bs-toggle="modal"

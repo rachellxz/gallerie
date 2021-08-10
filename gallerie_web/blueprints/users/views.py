@@ -132,6 +132,11 @@ def show(username):
     # to check if current_user is following user
     following_status = Follow.get_or_none(Follow.follower == current_user.id,
                                           Follow.artist == user.id)
+    # check if requested to follow
+    requests = (User.select().join(
+        Follow,
+        on=Follow.follower_id == User.id).where((Follow.artist == user)
+                                                & (Follow.approved == False)))
 
     if user:
         return render_template("users/show.html",
@@ -140,7 +145,8 @@ def show(username):
                                show_following=show_following,
                                following_count=following_count,
                                follower_count=follower_count,
-                               following_status=following_status)
+                               following_status=following_status,
+                               requests=requests)
 
     else:
         flash("This account doesn't exist.")
