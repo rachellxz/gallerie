@@ -8,12 +8,14 @@ followers
 
 <h2> {{user.first_name}}'s Followers: </h2>
 
-{% for profile in followers %}
 <ul style="list-style-type:none;">
-    <a href="{{url_for('users.show', username=profile.username)}}"> <img src="{{profile.profile_img_url}}"
-            style="border-radius: 50%; width: 70px" /> {{profile.username}} </a>
+    {% for profile in followers %}
+    <li>
+        <a href="{{url_for('users.show', username=profile.username)}}"> <img src="{{profile.profile_img_url}}"
+                style="border-radius: 50%; width: 70px" /> {{profile.username}} </a>
+    </li>
+    {% endfor %}
 </ul>
-{% endfor %}
 
 <a href="{{url_for('users.show', username=user.username)}}"> Back to gallerie </a>
 

@@ -84,9 +84,9 @@ edit profile
             <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
             Your profile is currently set to:
             {% if current_user.public_profile == False %}
-            Private <button type="submit" class="set-profile" name="private"> 🔒 </button>
+            Private <button type="submit" class="btn set-profile" name="private"> 🔒 </button>
             {% else: %}
-            Public <button type="submit" class="set-profile" name="public"> 🔓 </button>
+            Public <button type="submit" class="btn set-profile" name="public"> 🔓 </button>
             {% endif %}
         </form>
     </div>

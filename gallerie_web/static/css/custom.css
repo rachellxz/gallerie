@@ -1,3 +1,9 @@
+* {
+  font-family: EB Garamond;
+  text-align: center;
+  font-size: 20px;
+}
+
 body {
   margin: 0;
   padding-bottom: 15px;
@@ -14,11 +20,7 @@ footer {
   right: 0;
   text-align: center;
   color: #303030;
-}
-
-* {
-  font-family: Karla;
-  text-align: center;
+  background-color: white;
 }
 
 h1 {

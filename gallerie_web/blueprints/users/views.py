@@ -110,6 +110,7 @@ def update():
 
 # show user profiles by username
 @users_blueprint.route("/<username>", methods=["GET"])
+@login_required
 def show(username):
     user = User.get_or_none(User.username == username)
     feed = Feed.select(Feed, User).join(User).where(
@@ -155,6 +156,7 @@ def show(username):
 
 # view user's individual post
 @users_blueprint.route("/<username>/<id>", methods=["GET"])
+@login_required
 def view(username, id):
     user = User.get_or_none(User.username == username)
     image = Feed.get_or_none(Feed.id == id)
@@ -175,6 +177,7 @@ def view(username, id):
 
 # search profile by username
 @users_blueprint.route("/search", methods=["POST"])
+@login_required
 def search():
 
     username = request.form["username"].lower()
@@ -189,9 +192,8 @@ def search():
 
 
 @users_blueprint.route("/", methods=["GET"])
-@login_required
 def index():
-    return redirect(url_for("home"))
+    return render_template("landing.html")
 
 
 # upload profile pic

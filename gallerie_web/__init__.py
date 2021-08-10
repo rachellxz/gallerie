@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, flash
 from gallerie_web.blueprints.users.views import users_blueprint
 from gallerie_web.blueprints.login.views import login_blueprint
 from gallerie_web.blueprints.feed.views import feed_blueprint
@@ -16,7 +16,7 @@ from .util.assets import bundles
 assets = Environment(app)
 assets.register(bundles)
 
-app.register_blueprint(users_blueprint, url_prefix="/")
+app.register_blueprint(users_blueprint, url_prefix="/users")
 app.register_blueprint(login_blueprint, url_prefix="/login")
 app.register_blueprint(feed_blueprint, url_prefix="/feed")
 app.register_blueprint(payment_blueprint, url_prefix="/give")
@@ -30,6 +30,7 @@ def internal_server_error(e):
 
 @app.errorhandler(401)
 def unauthorized_entry(e):
+    flash("Make sure you are logged in!")
     return render_template('401.html'), 401
 
 
@@ -67,3 +68,8 @@ def explore():
             Feed.created_at.desc()).prefetch(users)
 
     return render_template("explore.html", feed=feed)
+
+
+@app.route("/")
+def index():
+    return render_template("landing.html")

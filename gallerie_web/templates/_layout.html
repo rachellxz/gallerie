@@ -6,16 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <link rel="shortcut icon" href="{{ url_for('static', filename='logo_favicon.png') }}">
-
-  {% assets "home_css" %}
-  <link rel="stylesheet" href="{{ ASSET_URL }}">
-  <link href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Karla&family=Palette+Mosaic&family=Roboto&family=Style+Script&display=swap"
+    href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Hahmlet&family=Inter&family=Style+Script&display=swap"
     rel="stylesheet">
+
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
+  {% assets "home_css" %}
+  <link rel="stylesheet" href="{{ ASSET_URL }}">
   {% endassets %}
 
   {% assets "home_js" %}
@@ -34,16 +36,18 @@
 
 <body>
   {% include "navbar.html" %}
-  {% for message in get_flashed_messages() %}
 
-  <h6> <mark> {{message}} </mark> </h6>
+  {% for message in get_flashed_messages() %}
+  <p> <mark> {{message}} </mark> </p>
   {% endfor %}
 
   {% block content %}
   {% endblock %}
+
   <footer>
     --- gallerie ---
   </footer>
+
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"

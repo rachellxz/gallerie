@@ -13,8 +13,14 @@ following
     <li>
         <a href="{{url_for('users.show', username=profile.username)}}"> <img src="{{profile.profile_img_url}}"
                 style="border-radius: 50%; width: 70px" /> {{profile.username}} </a>
+
+        <form action="{{url_for('followers.destroy')}}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+            <input type="hidden" name="artist" value="{{profile.id}}" />
+            <input type="hidden" name="follower" value="{{current_user.id}}" />
+            <button class="btn btn-outline-secondary" type="submit"> Unfollow </button>
+        </form>
     </li>
-    <!-- <li> <button class="btn btn-outline-secondary"> Unfollow </button> </li> -->
     {% endfor %}
 </ul>
 
