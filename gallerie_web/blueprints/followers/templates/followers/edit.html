@@ -5,16 +5,36 @@ Follow Requests
 {% endblock %}
 
 {% block content %}
-<h2> Follow Requests </h2>
-{{user.first_name}}'s Follow Requests:
+<main>
+    <h2> {{user.first_name}}'s Follow Requests </h2>
+    <div>
+        {% for follower in followers %}
 
-{% for follower in followers %}
+        <ul style="list-style-type:none;">
+            <a href="{{url_for('users.show', username=follower.username)}}" style="text-decoration: none; color: black">
+                <img src="{{follower.profile_img_url}}" style="border-radius: 50%; width: 70px;" />
+                {{follower.username}}
+            </a>
 
-<ul style="list-style-type:none;">
-    <a href="{{url_for('users.show', username=follower.username)}}"> <img src="{{follower.profile_img_url}}"
-            style="border-radius: 50%; width: 70px" /> {{follower.username}} </a>
-</ul>
+            <form action="{{url_for('followers.approve', id=follower.id)}}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+                <input hidden value="{{ follower.username}}" name="follower_username" />
+                <button class="btn btn-outline-success"> confirm </button>
+            </form>
 
-{%endfor%}
+
+            <form action="{{url_for('followers.delete', id=follower.id)}}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+                <input hidden value="{{ follower.username}}" name="follower_username" />
+                <button class="btn btn-outline-danger"> delete </button>
+            </form>
+        </ul>
+
+        {%endfor%}
+
+    </div>
+
+</main>
+
 
 {% endblock %}

@@ -50,17 +50,17 @@ def create():
 def destroy():
     artist = User.get_or_none(User.id == request.form["artist"])
     follower = User.get_or_none(User.id == request.form["follower"])
-    query = Follow.get_or_none(Follow.artist_id == artist.id
-                               and Follow.follower_id == follower.id)
-    if query.delete_instance():
+    follow_query = Follow.get_or_none(Follow.artist_id == artist.id
+                                      and Follow.follower_id == follower.id)
+    if follow_query.delete_instance():
         flash(f"You are no longer following {artist.username}")
-        return redirect(url_for("users.show", username=follower.username))
+        return redirect(url_for("users.show", username=artist.username))
     else:
         flash(f"Hmm, an error occurred. Please try again.")
-        return redirect(url_for("users.show", username=follower.username))
+        return redirect(url_for("users.show", username=artist.username))
 
 
-# follow request form
+# show follow requests
 @followers_blueprint.route("/requests", methods=["GET"])
 @login_required
 def edit():
@@ -75,14 +75,41 @@ def edit():
 
 
 # approve follow request
-@followers_blueprint.route("/<id>", methods=["POST"])
+@followers_blueprint.route("/approve/<id>", methods=["POST"])
 @login_required
-def approve():
-    pass
+def approve(id):
+    follow_request = Follow.get_or_none(Follow.follower_id == id)
+    follower = User.get_or_none(
+        User.username == request.form["follower_username"])
+
+    if follow_request:
+        follow_request.approved = True
+        if follow_request.save():
+            flash(f"You have approved {follower.username}'s' follow request.")
+            return redirect(url_for("followers.edit"))
+        else:
+            flash("Hmm, an error occurred. Please try again.")
+            return redirect(url_for("followers.edit"))
+    else:
+        flash("Hmm, an error occured. Please try again.")
+        return redirect(url_for("followers.edit"))
 
 
-# reject follow request
-@followers_blueprint.route("/<id>", methods=["POST"])
+# delete follow request
+@followers_blueprint.route("/delete/<id>", methods=["POST"])
 @login_required
-def reject():
-    pass
+def delete(id):
+    follow_request = Follow.get_or_none(Follow.follower_id == id)
+    follower = User.get_or_none(
+        User.username == request.form["follower_username"])
+
+    if follow_request:
+        if follow_request.delete_instance():
+            flash(f"{follower.username}'s request has been denied.")
+            return redirect(url_for("followers.edit"))
+        else:
+            flash("Hmm, an error occured. Please try again.")
+            return redirect(url_for("followers.edit"))
+    else:
+        flash("Hmm, an error occured. Please try again.")
+        return redirect(url_for("followers.edit"))
