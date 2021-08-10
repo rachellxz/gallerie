@@ -268,3 +268,10 @@ def view(username, id):
     else:
         flash("Hmm, an error occurred. Please try again.")
         return redirect(url_for("home"))
+
+
+# show user's followers
+@users_blueprint.route("/<username>/followers", methods=["GET"])
+@login_required
+def show_followers(username):
+    return username
