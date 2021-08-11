@@ -1,0 +1,77 @@
+{% extends "_layout.html" %}
+
+{% block title %}
+{{user.username}}
+{% endblock %}
+
+{% block content %}
+
+<h2> {{user.first_name}}'s gallerie </h2>
+<img src="{{ user.profile_img_url }}" width="80px" id="profile-img" style="border-radius: 50%">
+<br><br>
+
+<button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#loginModal">
+    Following: {{ following_count }}
+</button>
+
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel"> <img src="/static/logo_favicon.png" width="40%" /> </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Sign up or login to view {{user.username}}'s gallerie!
+                <br>
+                <br>
+                <button type="button" class="btn btn-primary">Login</button>
+                <br>
+                <br>
+                <button type="button" class="btn btn-primary">Sign Up</button>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#loginModal">
+    Following: {{ follower_count }}
+</button>
+
+
+{% if user.public_profile %}
+{% for i in feed %}
+<ol style="list-style-type:none;">
+
+    <li> <a href="{{url_for('users.view', username=user.username, id=i.id)}}"> <img src="{{ i.image_url }}"
+                width="100px" /> </a>
+    </li>
+
+    {% if i.img_description != None%}
+    <li>{{ i.img_description }}</li>
+    {% endif %}
+
+    Published on: {{ i.created_at.date() }}
+
+    <br>
+
+    {% if user.username == current_user.username %}
+
+    <div>
+        <form action="{{url_for('feed.delete', id=i.id)}}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token()}}" />
+            <input type="submit" value="delete" />
+        </form>
+    </div>
+
+    {% endif %}
+</ol>
+{% endfor %}
+{% else %}
+
+<div>
+    {{ user.username }}'s gallerie is private! Send a follow request to see {{ user.first_name }}'s gallerie.
+</div>
+
+{% endif %}
+{% endblock %}

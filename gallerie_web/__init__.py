@@ -16,7 +16,7 @@ from .util.assets import bundles
 assets = Environment(app)
 assets.register(bundles)
 
-app.register_blueprint(users_blueprint, url_prefix="/users")
+app.register_blueprint(users_blueprint, url_prefix="/")
 app.register_blueprint(login_blueprint, url_prefix="/login")
 app.register_blueprint(feed_blueprint, url_prefix="/feed")
 app.register_blueprint(payment_blueprint, url_prefix="/give")
@@ -30,7 +30,7 @@ def internal_server_error(e):
 
 @app.errorhandler(401)
 def unauthorized_entry(e):
-    return redirect(url_for("login.new"))
+    return render_template('401.html'), 401
 
 
 @app.errorhandler(404)
@@ -45,17 +45,21 @@ def method_not_allowed(e):
 
 # homepage: view posts from followed users
 @app.route("/home")
-@login_required
 def home():
-    user = User.get_or_none(User.id == current_user.id)
-    users = User.select()
-    feed = Feed.select().join(User, on=User.id == Feed.user_id).join(
-        Follow, on=Follow.artist_id == Feed.user_id).where(
-            (Follow.follower == user)
-            & (Follow.approved == True)).order_by(
-                Feed.created_at.desc()).prefetch(users)
+    if current_user.is_authenticated:
 
-    return render_template("home.html", feed=feed)
+        user = User.get_or_none(User.id == current_user.id)
+        users = User.select()
+        feed = Feed.select().join(User, on=User.id == Feed.user_id).join(
+            Follow, on=Follow.artist_id == Feed.user_id).where(
+                (Follow.follower == user)
+                & (Follow.approved == True)).order_by(
+                    Feed.created_at.desc()).prefetch(users)
+
+        return render_template("home.html", feed=feed)
+
+    else:
+        return redirect(url_for("login.new"))
 
 
 # explore page: view posts from public profiles

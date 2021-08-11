@@ -6,18 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
   <link rel="shortcut icon" href="{{ url_for('static', filename='logo_favicon.png') }}">
+
+
+  {% assets "home_css" %}
+  <link rel="stylesheet" href="{{ ASSET_URL }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Hahmlet&family=Inter&family=Style+Script&display=swap"
     rel="stylesheet">
-
-
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
-
-  {% assets "home_css" %}
-  <link rel="stylesheet" href="{{ ASSET_URL }}">
   {% endassets %}
 
   {% assets "home_js" %}

@@ -110,45 +110,67 @@ def update():
 
 # show user profiles by username
 @users_blueprint.route("/<username>", methods=["GET"])
-@login_required
 def show(username):
     user = User.get_or_none(User.username == username)
-    feed = Feed.select(Feed, User).join(User).where(
-        User.username == username).order_by(Feed.created_at.desc())
-
-    # show user's following and follower count:
-    show_following = User.select().join(Follow,
-                                        on=Follow.artist_id == User.id).where(
-                                            Follow.follower_id == user.id,
-                                            Follow.approved == True)
-
-    show_followers = User.select().join(
-        Follow,
-        on=Follow.follower_id == User.id).where(Follow.artist_id == user.id,
-                                                Follow.approved == True)
-
-    following_count = show_following.count()
-    follower_count = show_followers.count()
-
-    # to check if current_user is following user
-    following_status = Follow.get_or_none(Follow.follower == current_user.id,
-                                          Follow.artist == user.id)
-    # check if requested to follow
-    requests = (User.select().join(
-        Follow,
-        on=Follow.follower_id == User.id).where((Follow.artist == user)
-                                                & (Follow.approved == False)))
-
     if user:
-        return render_template("users/show.html",
-                               user=user,
-                               feed=feed,
-                               show_following=show_following,
-                               following_count=following_count,
-                               follower_count=follower_count,
-                               following_status=following_status,
-                               requests=requests)
+        if current_user.is_authenticated:
 
+            feed = Feed.select(Feed, User).join(User).where(
+                User.username == username).order_by(Feed.created_at.desc())
+
+            # show user's following and follower count:
+            show_following = User.select().join(
+                Follow, on=Follow.artist_id == User.id).where(
+                    Follow.follower_id == user.id, Follow.approved == True)
+
+            show_followers = User.select().join(
+                Follow, on=Follow.follower_id == User.id).where(
+                    Follow.artist_id == user.id, Follow.approved == True)
+
+            following_count = show_following.count()
+            follower_count = show_followers.count()
+
+            # check if current_user is following user
+            following_status = Follow.get_or_none(
+                Follow.follower == current_user.id, Follow.artist == user.id)
+
+            # check if requested to follow
+            requests = (User.select().join(
+                Follow, on=Follow.follower_id == User.id).where(
+                    (Follow.artist == user)
+                    & (Follow.approved == False)))
+
+            return render_template("users/show.html",
+                                   user=user,
+                                   feed=feed,
+                                   show_following=show_following,
+                                   following_count=following_count,
+                                   follower_count=follower_count,
+                                   following_status=following_status,
+                                   requests=requests)
+
+        else:
+            feed = Feed.select(Feed, User).join(User).where(
+                User.username == username).order_by(Feed.created_at.desc())
+
+            # show user's following and follower count:
+            show_following = User.select().join(
+                Follow, on=Follow.artist_id == User.id).where(
+                    Follow.follower_id == user.id, Follow.approved == True)
+
+            show_followers = User.select().join(
+                Follow, on=Follow.follower_id == User.id).where(
+                    Follow.artist_id == user.id, Follow.approved == True)
+
+            following_count = show_following.count()
+            follower_count = show_followers.count()
+
+            return render_template("users/show_anon.html",
+                                   user=user,
+                                   feed=feed,
+                                   following_count=following_count,
+                                   follower_count=follower_count,
+                                   username=username)
     else:
         flash("This account doesn't exist.")
         return redirect(url_for("home"))
@@ -156,30 +178,45 @@ def show(username):
 
 # view user's individual post
 @users_blueprint.route("/<username>/<id>", methods=["GET"])
-@login_required
 def view(username, id):
     user = User.get_or_none(User.username == username)
-    image = Feed.get_or_none(Feed.id == id)
-    token = gateway.client_token.generate()
-    following_status = Follow.get_or_none(Follow.follower == current_user.id,
-                                          Follow.artist == user.id)
+    if user:
+        if current_user.is_authenticated:
+            image = Feed.get_or_none(Feed.id == id)
+            token = gateway.client_token.generate()
+            following_status = Follow.get_or_none(
+                Follow.follower == current_user.id, Follow.artist == user.id)
 
-    if image:
-        return render_template("users/view.html",
-                               user=user,
-                               image=image,
-                               token=token,
-                               following_status=following_status)
+            if image:
+                return render_template("users/view.html",
+                                       user=user,
+                                       image=image,
+                                       token=token,
+                                       following_status=following_status)
+            else:
+                flash(
+                    "Hmm, we can't seem to find this post. Please try again.")
+                return redirect(url_for("home"))
+        else:
+            image = Feed.get_or_none(Feed.id == id)
+            token = gateway.client_token.generate()
+            if image:
+                return render_template("users/view_anon.html",
+                                       user=user,
+                                       image=image,
+                                       token=token)
+            else:
+                flash(
+                    "Hmm, we can't seem to find this post. Please try again.")
+                return redirect(url_for("home"))
     else:
-        flash("Hmm, we can't seem to find this post. Please try again.")
+        flash("Looks like we can't find what you're searching for.")
         return redirect(url_for("home"))
 
 
 # search profile by username
 @users_blueprint.route("/search", methods=["POST"])
-@login_required
 def search():
-
     username = request.form["username"].lower()
     # check if username exists in database
     valid_user = User.get_or_none(User.username == username)
@@ -189,11 +226,6 @@ def search():
     else:
         flash("This account does not exist.")
         return redirect(url_for("home"))
-
-
-@users_blueprint.route("/", methods=["GET"])
-def index():
-    return render_template("landing.html")
 
 
 # upload profile pic

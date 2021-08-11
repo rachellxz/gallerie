@@ -9,7 +9,10 @@ login_blueprint = Blueprint('login', __name__, template_folder='templates')
 # login form
 @login_blueprint.route("/", methods=["GET"])
 def new():
-    return render_template("login/new.html")
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+    else:
+        return render_template("login/new.html")
 
 
 # create session after successful login
